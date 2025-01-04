@@ -18,4 +18,4 @@ with st.expander('Data'):
 
 with st.sidebar:
   st.header("Введите признаки:")
-island = st.selectbox('Island', ('Tergersen', 'Dream', 'Biscoe'))
+  island = st.selectbox('Island', ('Tergersen', 'Dream', 'Biscoe'))
