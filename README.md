@@ -1,9 +1,6 @@
-# 📦 Streamlit App Starter Kit 
+# 📦 IIsoev first project
 ```
-⬆️ (Replace above with your app's name)
-```
-
-Description of the app ...
+Сегодня создать свой первый сайт
 
 ## Demo App
 
