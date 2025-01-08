@@ -5,25 +5,25 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 
-st.title('😁😂 My first website')
+st.title('Предсказание цены на подержанные автомобили Opel')
 
-st.write('Тут я задеплою модель классификации')
+st.write('Прогнозирование цены основывается на таких признаках, как модель, год выпуска, коробка передачи, тип топлива и город, где находится автомобиль.')
 
 df = pd.read_csv("Opel_data.csv")
 
 with st.expander('Data'):
   st.write("X")
-  X_raw = df.drop('species', axis=1)
+  X_raw = df.drop('Price', axis=1)
   st.dataframe(X_raw)
 
   st.write("y")
-  y_raw = df.species
+  y_raw = df.Price
   st.dataframe(y_raw)
 
 with st.sidebar:
   st.header("Введите признаки: ")
-  island = st.selectbox('Island', ('Torgersen', 'Dream', 'Biscoe'))
-  bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 44.5)
+  island = st.selectbox('Model', ('Opel Zafira', 'Opel Astra H', 'Opel Combo'))
+  bill_length_mm = st.slider('Year', 1956, 2025)
   bill_depth_mm = st.slider('Bill length (mm)', 13.1, 21.5, 17.3)
   flipper_length_mm = st.slider('Flipper length (mm)', 32.1, 59.6, 44.5)
   body_mass_g = st.slider('Body mass (g)', 32.1, 59.6, 44.5)
