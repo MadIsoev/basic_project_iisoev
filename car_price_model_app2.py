@@ -73,30 +73,6 @@ input_data = pd.DataFrame(
     columns=['Model', 'Year', 'Transmission', 'Fuel type', 'City']
 )
 
-# Декодеры
-model_decoder = {i: model for i, model in enumerate(['Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A'])}
-transmission_decoder = {i: trans for i, trans in enumerate(['Автомат', 'Механика', 'Робот', 'Вариатор'])}
-fuel_type_decoder = {i: fuel for i, fuel in enumerate(['Дизель', 'Бензин', 'Бензин + газ', 'Газ'])}
-city_decoder = {i: city for i, city in enumerate(['Душанбе', 'Худжанд', 'Куляб', 'Хорог', 'Дангара'])}
-
-# Пример данных
-input_data = {
-    'model': [4],
-    'year': [1996],
-    'transmission': [2],
-    'fuel_type': [1],
-    'city': [23],
-}
-
-# Декодируем данные
-decoded_data = {
-    'Модель': model_decoder[input_data['model'][0]],
-    'Год выпуска': input_data['year'][0],
-    'Коробка передач': transmission_decoder[input_data['transmission'][0]],
-    'Тип топлива': fuel_type_decoder[input_data['fuel_type'][0]],
-    'Город': city_decoder[input_data['city'][0]],
-}
-
 # Отображаем в Streamlit
 with st.expander('Введённые данные'):
     st.dataframe(pd.DataFrame([decoded_data]))
