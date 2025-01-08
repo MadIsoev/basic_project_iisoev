@@ -10,18 +10,22 @@ st.title('Предсказание цены на подержанные авто
 
 st.write('Прогнозирование цены основывается на таких признаках, как модель, год выпуска, коробка передачи, тип топлива и город, где находится автомобиль.')
 
+# Пример загрузки данных
 df = pd.read_csv("Opel_data.csv")
 
+# Удаляем разделители тысяч в Year и Price
 df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
+df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
 
+# Отображаем таблицу
 with st.expander('Data'):
-  st.write("X")
-  X_raw = df.drop('Price', axis=1)
-  st.dataframe(X_raw)
+    st.write("X")
+    X_raw = df.drop('Price', axis=1)
+    st.dataframe(X_raw)
 
-  st.write("y")
-  y_raw = df.Price
-  st.dataframe(y_raw)
+    st.write("y")
+    y_raw = df['Price']
+    st.dataframe(y_raw)
 
 with st.sidebar:
   st.header("Введите признаки: ")
