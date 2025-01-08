@@ -22,13 +22,14 @@ with st.expander('Data'):
 
 with st.sidebar:
   st.header("Введите признаки: ")
-  island = st.selectbox('Model', ('Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A', 'Opel Vectra B', 'Opel Vectra C', 'Opel Zafira', 'Opel Astra J', 'Opel Meriva', 'Opel Omega', 'Opel Frontera', 'Opel Astra K', 'Opel Insignia', 'Opel Vita', 'Opel Corsa', 'Opel Calibra', 'Opel Signum', 'Opel Tigra', 'Opel Antara',
-       'Opel Sintra', 'Opel Vectra С', 'Opel Vectra А', 'Opel Agila', 'Opel Mokka', 'Opel Campo', 'Opel Cavalier'))
-  bill_length_mm = st.slider('Year', 1956, 2024)
-  bill_depth_mm = st.slider('Bill length (mm)', 13.1, 21.5, 17.3)
-  flipper_length_mm = st.slider('Flipper length (mm)', 32.1, 59.6, 44.5)
-  body_mass_g = st.slider('Body mass (g)', 32.1, 59.6, 44.5)
-  gender = st.selectbox('Gender', ('female', 'male'))
+  model = st.selectbox('Модель:', ('Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A', 'Opel Vectra B', 'Opel Vectra C', 'Opel Zafira', 
+                                  'Opel Astra J', 'Opel Meriva', 'Opel Omega', 'Opel Frontera', 'Opel Astra K', 'Opel Insignia', 'Opel Vita', 'Opel Corsa', 'Opel Calibra', 
+                                  'Opel Signum', 'Opel Tigra', 'Opel Antara', 'Opel Sintra', 'Opel Vectra С', 'Opel Vectra А', 'Opel Agila', 'Opel Mokka', 'Opel Campo', 
+                                  'Opel Cavalier'))
+  year = st.slider('Год выпуска:', 1956, 2024)
+  transmission = st.slider('Коробка передачи:', 'Автомат', 'Механика', 'Робот', 'Вариатор')
+  fuel_type = st.slider('Тип топлива', 32.1, 59.6, 44.5)
+  city = st.slider('Body mass (g)', 32.1, 59.6, 44.5)
 
 # Plotting some features
 st.subheader('Data Visualization')
