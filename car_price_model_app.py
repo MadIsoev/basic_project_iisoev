@@ -19,11 +19,11 @@ df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
 
 # Отображаем таблицу
 with st.expander('Data'):
-    st.write("X")
+    st.write("Признаки:")
     X_raw = df.drop('Price', axis=1)
     st.dataframe(X_raw)
 
-    st.write("y")
+    st.write("Целовая переменная")
     y_raw = df['Price']
     st.dataframe(y_raw)
 
