@@ -22,14 +22,27 @@ with st.expander('Data'):
 
 with st.sidebar:
   st.header("Введите признаки: ")
-  model = st.selectbox('Модель:', ('Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A', 'Opel Vectra B', 'Opel Vectra C', 'Opel Zafira', 
+  model = st.selectbox('Модель', ('Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A', 'Opel Vectra B', 'Opel Vectra C', 'Opel Zafira', 
                                   'Opel Astra J', 'Opel Meriva', 'Opel Omega', 'Opel Frontera', 'Opel Astra K', 'Opel Insignia', 'Opel Vita', 'Opel Corsa', 'Opel Calibra', 
                                   'Opel Signum', 'Opel Tigra', 'Opel Antara', 'Opel Sintra', 'Opel Vectra С', 'Opel Vectra А', 'Opel Agila', 'Opel Mokka', 'Opel Campo', 
                                   'Opel Cavalier'))
-  year = st.slider('Год выпуска:', 1956, 2024)
-  # transmission = st.slider('Коробка передачи:', 'Автомат', 'Механика', 'Робот', 'Вариатор')
-  fuel_type = st.slider('Тип топлива', 32.1, 59.6, 44.5)
-  city = st.slider('Body mass (g)', 32.1, 59.6, 44.5)
+  year = st.slider('Год выпуска', 1956, 2024)
+  transmission = st.selectbox('Коробка передачи', ('Автомат', 'Механика', 'Робот', 'Вариатор'))
+  fuel_type = st.selectbox('Тип топлива',), ('Дизель', 'Бензин', 'Бензин + газ', 'Газ', 'Другой')
+  city = st.selectbox('Город',) ('Худжанд', 'Кабодиён', 'Фархор', 'Вахдат', 'Душанбе', 'Рашт',
+       'Дангара', 'Яван', 'Пенджикент', 'Куляб', 'Истаравшан',
+       'Дусти (Джиликуль)', 'Бободжон Гафуров', 'Файзабад', 'Ашт',
+       'Спитамен', 'Вахш', 'Исфара', 'Хамадани', 'Бохтар (Курган-Тюбе)',
+       'Кушониён (Бохтар)', 'Рудаки', 'Пяндж', 'Канибадам', 'Хуросон',
+       'Шахринав', 'Джалолиддин Балхи (Руми)', 'Восе', 'Нурек',
+       'Турсунзаде', 'Матча', 'Джаббор Расулов', 'Зафарабад',
+       'Джайхун (Кумсангир)', 'Деваштич (Ганчи)', 'Шахристон', 'Гиссар',
+       'Варзоб', 'Гулистон (Кайраккум)', 'Абдурахмони Джоми', 'Шахритус',
+       'Бустон (Чкаловск)', 'Темурмалик', 'Леваканд (Сарбанд)',
+       'Таджикабад', 'Рогун', 'Нурабад', 'Муминабад', 'Айни',
+       'Носири Хусрав', 'Джами', 'Лахш (Джиргиталь)', 'Хорог',
+       'Шамсиддин Шохин (Шуроабад)', 'Вандж', 'Ховалинг', 'Бальджувон',
+       'Горная Матча', 'Истиклол', 'Дарваз')
 
 # Plotting some features
 st.subheader('Data Visualization')
