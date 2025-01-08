@@ -27,7 +27,7 @@ with st.sidebar:
                                   'Opel Signum', 'Opel Tigra', 'Opel Antara', 'Opel Sintra', 'Opel Vectra С', 'Opel Vectra А', 'Opel Agila', 'Opel Mokka', 'Opel Campo', 
                                   'Opel Cavalier'))
   year = st.slider('Год выпуска:', 1956, 2024)
-  transmission = st.slider('Коробка передачи:', 'Автомат', 'Механика', 'Робот', 'Вариатор')
+  # transmission = st.slider('Коробка передачи:', 'Автомат', 'Механика', 'Робот', 'Вариатор')
   fuel_type = st.slider('Тип топлива', 32.1, 59.6, 44.5)
   city = st.slider('Body mass (g)', 32.1, 59.6, 44.5)
 
