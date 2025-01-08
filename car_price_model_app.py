@@ -12,6 +12,8 @@ st.write('Прогнозирование цены основывается на 
 
 df = pd.read_csv("Opel_data.csv")
 
+df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
+
 with st.expander('Data'):
   st.write("X")
   X_raw = df.drop('Price', axis=1)
