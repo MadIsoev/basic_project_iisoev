@@ -73,11 +73,9 @@ input_data = pd.DataFrame(
     columns=['Model', 'Year', 'Transmission', 'Fuel type', 'City']
 )
 
-# Отображаем в Streamlit
 with st.expander('Введённые данные'):
-    st.dataframe(pd.DataFrame([decoded_data]))
-
-
+    st.dataframe(input_data)
+    
 # Предсказание цены
 if st.button("Предсказать цену"):
     try:
