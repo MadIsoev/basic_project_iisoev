@@ -1,146 +1,95 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
 import numpy as np
+import plotly.express as px
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+import joblib
 
-st.title('😁😂 My first website')
+# Заголовок приложения
+st.title('Предсказание цены на подержанные автомобили Opel')
 
-st.write('Тут я задеплою модель классификации')
+st.write('Прогнозирование цены основывается на таких признаках, как модель, год выпуска, коробка передач, тип топлива и город, где находится автомобиль.')
 
-df = pd.read_csv("https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv")
+# Загрузка данных
+@st.cache_data
+def load_data():
+    return pd.read_csv("Opel_data.csv")
 
-with st.expander('Data'):
-  st.write("X")
-  X_raw = df.drop('species', axis=1)
-  st.dataframe(X_raw)
+# Обучение модели
+@st.cache_resource
+def train_model(df):
+    label_encoders = {}
+    for col in ['Model', 'Transmission', 'Fuel type', 'City']:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col])
+        label_encoders[col] = le
 
-  st.write("y")
-  y_raw = df.species
-  st.dataframe(y_raw)
+    # Разделение данных
+    X = df.drop('Price', axis=1)
+    y = df['Price']
 
-with st.sidebar:
-  st.header("Введите признаки: ")
-  island = st.selectbox('Island', ('Torgersen', 'Dream', 'Biscoe'))
-  bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 44.5)
-  bill_depth_mm = st.slider('Bill length (mm)', 13.1, 21.5, 17.3)
-  flipper_length_mm = st.slider('Flipper length (mm)', 32.1, 59.6, 44.5)
-  body_mass_g = st.slider('Body mass (g)', 32.1, 59.6, 44.5)
-  gender = st.selectbox('Gender', ('female', 'male'))
+    # Обучение модели
+    model = RandomForestRegressor(random_state=42, n_estimators=100)
+    model.fit(X, y)
+    joblib.dump(model, 'opel_model.pkl')
+    return model, label_encoders
 
-# Plotting some features
-st.subheader('Data Visualization')
-fig = px.scatter(
-    df,
-    x='bill_length_mm',
-    y='bill_depth_mm',
-    color='island',
-    title='Bill Length vs. Bill Depth by Island'
-)
+# Загрузка данных
+df = load_data()
+
+# Преобразование числовых данных
+df['Year'] = df['Year'].astype(int)
+df['Price'] = df['Price'].astype(int)
+
+# Визуализация данных
+st.subheader('Визуализация данных')
+fig = px.scatter(df, x='Year', y='Price', color='Fuel type', title='Зависимость цены от года выпуска и типа топлива')
 st.plotly_chart(fig)
 
-fig2 = px.histogram(
-    df, 
-    x='body_mass_g', 
-    nbins=30, 
-    title='Distribution of Body Mass'
-)
+fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
-## Preprocessing
-data = {
-    'island': island,
-    'bill_length_mm': bill_length_mm,
-    'bill_depth_mm': bill_depth_mm,
-    'flipper_length_mm': flipper_length_mm,
-    'body_mass_g': body_mass_g,
-    'sex': gender
-}
-input_df = pd.DataFrame(data, index=[0])
-input_penguins = pd.concat([input_df, X_raw], axis=0)
+# Обучение модели
+model, label_encoders = train_model(df)
 
-with st.expander('Input features'):
-    st.write('**Input penguin**')
-    st.dataframe(input_df)
-    st.write('**Combined penguins data** (input row + original data)')
-    st.dataframe(input_penguins)
+# Интерфейс для ввода данных
+with st.sidebar:
+    st.header("Введите характеристики автомобиля: ")
+    model_input = st.selectbox('Модель', label_encoders['Model'].classes_)
+    year_input = st.slider('Год выпуска', min(df['Year']), max(df['Year']), step=1)
+    transmission_input = st.selectbox('Коробка передач', label_encoders['Transmission'].classes_)
+    fuel_type_input = st.selectbox('Тип топлива', label_encoders['Fuel type'].classes_)
+    city_input = st.selectbox('Город', label_encoders['City'].classes_)
 
-encode = ['island', 'sex']
-df_penguins = pd.get_dummies(input_penguins, prefix=encode)
+# Преобразование введённых данных
+model_encoded = label_encoders['Model'].transform([model_input])[0]
+transmission_encoded = label_encoders['Transmission'].transform([transmission_input])[0]
+fuel_type_encoded = label_encoders['Fuel type'].transform([fuel_type_input])[0]
+city_encoded = label_encoders['City'].transform([city_input])[0]
 
-# Separate the top row (our input) from the rest
-X = df_penguins[1:]
-input_row = df_penguins[:1]
-
-# Encode the target
-target_mapper = {'Adelie': 0, 'Chinstrap': 1, 'Gentoo': 2}
-def target_encode(val):
-    return target_mapper[val]
-
-y = y_raw.apply(target_encode)
-
-with st.expander('Data preparation'):
-    st.write('**Encoded X (input penguin)**')
-    st.dataframe(input_row)
-    st.write('**Encoded y**')
-    st.write(y)
-
-# Model Training
-param_grid = {
-    'n_estimators': [50, 100],
-    'max_depth': [None, 5, 10]
-}
-
-# Create the base model
-base_rf = RandomForestClassifier(random_state=42)
-
-# Perform grid search
-grid_search = GridSearchCV(base_rf, param_grid, cv=3, scoring='accuracy', n_jobs=-1)
-grid_search.fit(X, y)
-
-best_model = grid_search.best_estimator_
-best_params = grid_search.best_params_
-st.write("**Best Parameters**:", best_params)
-
-# ---------------------------
-# 7) Apply the best model to make predictions
-# ---------------------------
-prediction = best_model.predict(input_row)
-prediction_proba = best_model.predict_proba(input_row)
-
-df_prediction_proba = pd.DataFrame(prediction_proba, columns=['Adelie', 'Chinstrap', 'Gentoo'])
-
-## Print model final results
-
-st.subheader('Predicted Species')
-st.dataframe(
-    df_prediction_proba,
-    column_config={
-        'Adelie': st.column_config.ProgressColumn(
-            'Adelie',
-            format='%f',
-            width='medium',
-            min_value=0,
-            max_value=1
-        ),
-        'Chinstrap': st.column_config.ProgressColumn(
-            'Chinstrap',
-            format='%f',
-            width='medium',
-            min_value=0,
-            max_value=1
-        ),
-        'Gentoo': st.column_config.ProgressColumn(
-            'Gentoo',
-            format='%f',
-            width='medium',
-            min_value=0,
-            max_value=1
-        ),
-    },
-    hide_index=True
+input_data = pd.DataFrame(
+    [[model_encoded, year_input, transmission_encoded, fuel_type_encoded, city_encoded]],
+    columns=['Model', 'Year', 'Transmission', 'Fuel type', 'City']
 )
 
-penguins_species = np.array(['Adelie', 'Chinstrap', 'Gentoo'])
-st.success(f"Predicted species: **{penguins_species[prediction][0]}**")
+with st.expander('Введённые данные'):
+    st.dataframe(input_data)
+
+# Предсказание цены
+if st.button("Предсказать цену"):
+    try:
+        prediction = model.predict(input_data)[0]
+        st.success(f"Прогнозируемая цена автомобиля: {prediction:.2f} сомони")
+    except Exception as e:
+        st.error(f"Ошибка предсказания: {e}")
+
+# Дополнительно: вывод вероятностей или других показателей
+with st.expander('Детали модели и вероятности'):
+    feature_importances = pd.DataFrame(
+        model.feature_importances_,
+        index=input_data.columns,
+        columns=['Importance']
+    ).sort_values(by='Importance', ascending=False)
+    st.write("**Важность признаков:**")
+    st.dataframe(feature_importances)
