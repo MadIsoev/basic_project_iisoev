@@ -27,7 +27,7 @@ with st.expander('Data'):
     st.dataframe(y_raw)
 
 with st.sidebar:
-  st.header("Введите признаки: ")
+  st.header("Введите характеристики автомобиля: ")
   model = st.selectbox('Модель', ('Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A', 'Opel Vectra B', 'Opel Vectra C', 'Opel Zafira', 
                                   'Opel Astra J', 'Opel Meriva', 'Opel Omega', 'Opel Frontera', 'Opel Astra K', 'Opel Insignia', 'Opel Vita', 'Opel Corsa', 'Opel Calibra', 
                                   'Opel Signum', 'Opel Tigra', 'Opel Antara', 'Opel Sintra', 'Opel Vectra С', 'Opel Vectra А', 'Opel Agila', 'Opel Mokka', 'Opel Campo', 
@@ -43,15 +43,9 @@ with st.sidebar:
        'Таджикабад', 'Рогун', 'Нурабад', 'Муминабад', 'Айни', 'Носири Хусрав', 'Джами', 'Лахш (Джиргиталь)',
        'Шамсиддин Шохин (Шуроабад)', 'Вандж', 'Ховалинг', 'Бальджувон', 'Горная Матча', 'Истиклол', 'Дарваз'))
 
-# Plotting some features
-st.subheader('Data Visualization')
-fig = px.scatter(
-    df,
-    x='Year',
-    y='Price',
-    color='island',
-    title='Bill Length vs. Bill Depth by Island'
-)
+# Визуализация данных
+st.subheader('Визуализация данных')
+fig = px.scatter(df, x='Year', y='Price', color='Fuel type', title='Зависимость цены от года выпуска и типа топлива')
 st.plotly_chart(fig)
 
 fig2 = px.histogram(
