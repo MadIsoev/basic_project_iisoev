@@ -102,11 +102,12 @@ grid_search.fit(X, y)
 # Лучшая модель
 best_model = grid_search.best_estimator_
 best_params = grid_search.best_params_
-st.write("**Best Parameters**:", best_params)
+st.write("**Лучшие параметры модели:**", best_params)
 
 # Предсказание
 prediction = best_model.predict(input_row)
 
 # Отображение результатов
-st.subheader('Predicted Price')
-st.write(f"**Predicted car price:** {prediction[0]:,.2f} сомони")
+st.subheader('Предсказанная цена')
+st.write(f"**Предсказанная цена автомобиля:** {prediction[0]:,.2f} сомони")
+
