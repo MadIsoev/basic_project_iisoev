@@ -58,3 +58,6 @@ with st.expander('Введённые данные'):
     st.write('Введённые характеристики автомобиля:')
     st.dataframe(input_df)
 
+# Кодирование категориальных признаков
+encoded_df = pd.get_dummies(combined_df, columns=['Model', 'Transmission', 'Fuel type', 'City'], drop_first=True)
+
