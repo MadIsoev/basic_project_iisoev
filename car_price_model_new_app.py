@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
 
 st.title('Предсказание цены на подержанные автомобили Opel')
@@ -74,3 +74,22 @@ with st.expander('Подготовленные данные'):
     st.dataframe(X)
     st.write('**Целевая переменная (y):**')
     st.write(y)
+
+# Обучение модели
+st.subheader('Обучение модели Random Forest Regressor')
+
+param_grid = {
+    'n_estimators': [50, 100],
+    'max_depth': [None, 5, 10]
+}
+
+base_rf = RandomForestRegressor(random_state=42)
+grid_search = GridSearchCV(base_rf, param_grid, cv=3, scoring='neg_mean_squared_error', n_jobs=-1)
+grid_search.fit(X, y)
+
+best_model = grid_search.best_estimator_
+st.write("**Лучшие параметры модели:**", grid_search.best_params_)
+
+# Предсказание цены
+prediction = best_model.predict(input_row)
+st.success(f"Предсказанная цена: {int(prediction[0])} сомони")
