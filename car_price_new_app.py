@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
 
 st.title('Предсказание цены на подержанные автомобили Opel')
@@ -11,7 +11,7 @@ st.write('Прогнозирование цены основывается на 
 # Загрузка данных
 df = pd.read_csv("Opel_data.csv")
 
-# Удаляем разделители тысяч и преобразуем в числовые данные
+# Преобразование данных
 df['Year'] = df['Year'].astype(int)
 df['Price'] = df['Price'].astype(int)
 
@@ -42,7 +42,7 @@ st.plotly_chart(fig)
 fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
-# Предобработка данных
+# Подготовка введённых данных
 data = {
     'Model': model,
     'Year': year,
@@ -52,11 +52,6 @@ data = {
 }
 input_df = pd.DataFrame([data])
 combined_df = pd.concat([input_df, X_raw], axis=0)
-
-# Отображение введённых данных
-with st.expander('Введённые данные'):
-    st.write('Введённые характеристики автомобиля:')
-    st.dataframe(input_df)
 
 # Кодирование категориальных признаков
 encoded_df = pd.get_dummies(combined_df, columns=['Model', 'Transmission', 'Fuel type', 'City'], drop_first=True)
@@ -76,8 +71,14 @@ with st.expander('Подготовленные данные'):
     st.write(y)
 
 # Обучение модели
-param_grid = {'n_estimators': [50, 100], 'max_depth': [None, 5, 10]}
-base_rf = RandomForestClassifier(random_state=42)
+st.subheader('Обучение модели Random Forest Regressor')
+
+param_grid = {
+    'n_estimators': [50, 100],
+    'max_depth': [None, 5, 10]
+}
+
+base_rf = RandomForestRegressor(random_state=42)
 grid_search = GridSearchCV(base_rf, param_grid, cv=3, scoring='neg_mean_squared_error', n_jobs=-1)
 grid_search.fit(X, y)
 
