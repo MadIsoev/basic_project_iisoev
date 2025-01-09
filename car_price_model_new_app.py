@@ -61,3 +61,6 @@ with st.expander('Введённые данные'):
 # Кодирование категориальных признаков
 encoded_df = pd.get_dummies(combined_df, columns=['Model', 'Transmission', 'Fuel type', 'City'], drop_first=True)
 
+# Разделение данных
+X = encoded_df.iloc[1:].reset_index(drop=True)
+input_row = encoded_df.iloc[0:1]
