@@ -34,5 +34,12 @@ with st.sidebar:
     fuel_type = st.selectbox('Тип топлива', df['Fuel type'].unique())
     city = st.selectbox('Город', df['City'].unique())
 
+# Визуализация данных
+st.subheader('Визуализация данных')
+fig = px.scatter(df, x='Year', y='Price', color='Fuel type', title='Зависимость цены от года выпуска и типа топлива')
+st.plotly_chart(fig)
+
+fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
+st.plotly_chart(fig2)
 
 
