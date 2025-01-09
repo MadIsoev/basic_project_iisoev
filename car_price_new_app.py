@@ -42,49 +42,4 @@ st.plotly_chart(fig)
 fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
-# Подготовка введённых данных
-data = {
-    'Model': model,
-    'Year': year,
-    'Transmission': transmission,
-    'Fuel type': fuel_type,
-    'City': city
-}
-input_df = pd.DataFrame([data])
-combined_df = pd.concat([input_df, X_raw], axis=0)
 
-# Кодирование категориальных признаков
-encoded_df = pd.get_dummies(combined_df, columns=['Model', 'Transmission', 'Fuel type', 'City'], drop_first=True)
-
-# Разделение данных
-X = encoded_df.iloc[1:].reset_index(drop=True)
-input_row = encoded_df.iloc[0:1]
-
-# Целевая переменная
-y = y_raw
-
-# Подготовка данных
-with st.expander('Подготовленные данные'):
-    st.write('**Признаки (X):**')
-    st.dataframe(X)
-    st.write('**Целевая переменная (y):**')
-    st.write(y)
-
-# Обучение модели
-st.subheader('Обучение модели Random Forest Regressor')
-
-param_grid = {
-    'n_estimators': [50, 100],
-    'max_depth': [None, 5, 10]
-}
-
-base_rf = RandomForestRegressor(random_state=42)
-grid_search = GridSearchCV(base_rf, param_grid, cv=3, scoring='neg_mean_squared_error', n_jobs=-1)
-grid_search.fit(X, y)
-
-best_model = grid_search.best_estimator_
-st.write("**Лучшие параметры модели:**", grid_search.best_params_)
-
-# Предсказание цены
-prediction = best_model.predict(input_row)
-st.success(f"Предсказанная цена: {int(prediction[0])} сомони")
