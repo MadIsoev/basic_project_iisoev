@@ -63,10 +63,10 @@ data = {
 input_df = pd.DataFrame(data, index=[0])
 input_cars = pd.concat([input_df, X_raw], axis=0)
 
-with st.expander('Input features'):
-    st.write('**Input car**')
+with st.expander('Входные данные'):
+    st.write('**Введённые данные автомобиля:**')
     st.dataframe(input_df)
-    st.write('**Combined cars data** (input row + original data)')
+    st.write('**Объединённые данные автомобилей (введённая строка + исходные данные):**')
     st.dataframe(input_cars)
 
 # Кодирование категориальных признаков
