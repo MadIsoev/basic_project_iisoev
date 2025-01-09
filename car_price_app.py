@@ -17,7 +17,7 @@ df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
 df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
 
 # Отображаем таблицу
-with st.expander('Data'):
+with st.expander('Данные'):
     st.write("Признаки:")
     X_raw = df.drop('Price', axis=1)
     st.dataframe(X_raw)
@@ -53,20 +53,20 @@ st.plotly_chart(fig2)
 
 # Preprocessing
 data = {
-    'Model': model,
-    'Year': year,
-    'Transmission': transmission,
-    'Fuel type': fuel_type,
-    'City': city
+    'Модель': model,
+    'Год выпуска': year,
+    'Коробка передач': transmission,
+    'Тип топлива': fuel_type,
+    'Город': city
 }
 
 input_df = pd.DataFrame(data, index=[0])
 input_cars = pd.concat([input_df, X_raw], axis=0)
 
-with st.expander('Input features'):
-    st.write('**Input car**')
+with st.expander('Входные данные'):
+    st.write('**Введённые данные автомобиля:**')
     st.dataframe(input_df)
-    st.write('**Combined cars data** (input row + original data)')
+    st.write('**Объединённые данные автомобилей (введённая строка + исходные данные):**')
     st.dataframe(input_cars)
 
 # Кодирование категориальных признаков
@@ -80,10 +80,10 @@ input_row = df_cars[:1]  # Данные для предсказания (пер�
 # Целевая переменная
 y = y_raw
 
-with st.expander('Data preparation'):
-    st.write('**Encoded X (input car)**')
+with st.expander('Подготовка данных'):
+    st.write('**Кодированные X (входные данные автомобиля):**')
     st.dataframe(input_row)
-    st.write('**Encoded y (target variable)**')
+    st.write('**Целевая переменная (цены):**')
     st.write(y)
 
 # Настройка гиперпараметров
@@ -102,12 +102,11 @@ grid_search.fit(X, y)
 # Лучшая модель
 best_model = grid_search.best_estimator_
 best_params = grid_search.best_params_
-st.write("**Best Parameters**:", best_params)
+st.write("**Лучшие параметры модели:**", best_params)
 
 # Предсказание
 prediction = best_model.predict(input_row)
 
 # Отображение результатов
-st.subheader('Predicted Price')
-st.write(f"**Predicted car price:** {prediction[0]:,.2f} сомони")
-
+st.subheader('Предсказанная цена')
+st.write(f"**Предсказанная цена автомобиля:** {prediction[0]:,.2f} сомони")
