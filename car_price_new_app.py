@@ -68,7 +68,7 @@ with st.expander('Input features'):
     st.write('**Combined penguins data** (input row + original data)')
     st.dataframe(input_penguins)
 
-encode = ['island', 'sex']
+encode = ['model', 'transmission', 'fuel_type', 'city']
 df_penguins = pd.get_dummies(input_penguins, prefix=encode)
 
 # Separate the top row (our input) from the rest
