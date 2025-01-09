@@ -13,23 +13,8 @@ st.write('Прогнозирование цены основывается на 
 df = pd.read_csv("Opel_data.csv")
 
 # Удаляем разделители тысяч в Year и Price
-# df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
-# df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
-
-# df['Year'] = df['Year'].apply(lambda x: str(int(str(x).replace(',', ''))))
-# df['Price'] = df['Price'].apply(lambda x: str(int(str(x).replace(',', ''))))
-
-# Преобразование для корректной обработки тысячных разделителей
-def clean_data(x):
-    try:
-        # Убираем все ненужные символы (например, запятые) и преобразуем в число
-        return str(int(str(x).replace(',', '').replace(' ', '')))
-    except:
-        return str(x)  # Если возникнет ошибка, просто вернем значение как строку
-
-df['Year'] = df['Year'].apply(clean_data)
-df['Price'] = df['Price'].apply(clean_data)
-
+df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
+df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
 
 # Отображаем таблицу
 with st.expander('Data'):
