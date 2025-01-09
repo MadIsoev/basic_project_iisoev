@@ -48,22 +48,16 @@ st.subheader('Визуализация данных')
 fig = px.scatter(df, x='Year', y='Price', color='Fuel type', title='Зависимость цены от года выпуска и типа топлива')
 st.plotly_chart(fig)
 
-fig2 = px.histogram(
-    df, 
-    x='body_mass_g', 
-    nbins=30, 
-    title='Distribution of Body Mass'
-)
+fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
 ## Preprocessing
 data = {
-    'island': island,
-    'bill_length_mm': bill_length_mm,
-    'bill_depth_mm': bill_depth_mm,
-    'flipper_length_mm': flipper_length_mm,
-    'body_mass_g': body_mass_g,
-    'sex': gender
+    'Модель': Model,
+    'Год выпуска': Year,
+    'Коробка передач': Transmission,
+    'Тип топлива': Fuel_type,
+    'Город': City
 }
 input_df = pd.DataFrame(data, index=[0])
 input_penguins = pd.concat([input_df, X_raw], axis=0)
