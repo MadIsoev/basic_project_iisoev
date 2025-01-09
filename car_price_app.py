@@ -17,7 +17,7 @@ df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
 df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
 
 # Отображаем таблицу
-with st.expander('Data'):
+with st.expander('Данные'):
     st.write("Признаки:")
     X_raw = df.drop('Price', axis=1)
     st.dataframe(X_raw)
