@@ -42,4 +42,14 @@ st.plotly_chart(fig)
 fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
+# Предобработка данных
+data = {
+    'Model': model,
+    'Year': year,
+    'Transmission': transmission,
+    'Fuel type': fuel_type,
+    'City': city
+}
+input_df = pd.DataFrame([data])
+combined_df = pd.concat([input_df, X_raw], axis=0)
 
