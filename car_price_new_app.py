@@ -53,11 +53,11 @@ st.plotly_chart(fig2)
 
 ## Preprocessing
 data = {
-    'Модель': Model,
-    'Год выпуска': Year,
-    'Коробка передач': Transmission,
-    'Тип топлива': Fuel_type,
-    'Город': City
+    'Модель': model,
+    'Год выпуска': year,
+    'Коробка передач': transmission,
+    'Тип топлива': fuel_type,
+    'Город': city
 }
 input_df = pd.DataFrame(data, index=[0])
 input_penguins = pd.concat([input_df, X_raw], axis=0)
