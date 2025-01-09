@@ -13,8 +13,11 @@ st.write('Прогнозирование цены основывается на 
 df = pd.read_csv("Opel_data.csv")
 
 # Удаляем разделители тысяч в Year и Price
-df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
-df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
+# df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
+# df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
+
+df['Year'] = df['Year'].apply(lambda x: str(int(str(x).replace(',', ''))))
+df['Price'] = df['Price'].apply(lambda x: str(int(str(x).replace(',', ''))))
 
 # Отображаем таблицу
 with st.expander('Data'):
@@ -51,7 +54,7 @@ st.plotly_chart(fig)
 fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
-# Preprocessing
+# Предобработка данных
 data = {
     'Model': model,
     'Year': year,
