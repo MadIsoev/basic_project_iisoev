@@ -64,3 +64,13 @@ encoded_df = pd.get_dummies(combined_df, columns=['Model', 'Transmission', 'Fuel
 # Разделение данных
 X = encoded_df.iloc[1:].reset_index(drop=True)
 input_row = encoded_df.iloc[0:1]
+
+# Целевая переменная
+y = y_raw
+
+# Подготовка данных
+with st.expander('Подготовленные данные'):
+    st.write('**Признаки (X):**')
+    st.dataframe(X)
+    st.write('**Целевая переменная (y):**')
+    st.write(y)
