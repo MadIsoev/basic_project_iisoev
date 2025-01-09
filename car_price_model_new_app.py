@@ -66,50 +66,5 @@ input_cars = pd.concat([input_df, X_raw], axis=0)
 
 # Вторая часть
 
-with st.expander('Input features'):
-    st.write('**Input car**')
-    st.dataframe(input_df)
-    st.write('**Combined car data** (input row + original data)')
-    st.dataframe(input_cars)
 
-# Кодирование категориальных признаков
-encode = ['Model', 'Transmission', 'Fuel type', 'City']
-input_cars_encoded = pd.get_dummies(input_cars, columns=encode)
-
-# Разделяем входной автомобиль и остальные данные
-X = input_cars_encoded[1:]
-input_row = input_cars_encoded[:1]
-
-# Целевая переменная (цена)
-y = y_raw
-
-with st.expander('Data preparation'):
-    st.write('**Encoded X (input car)**')
-    st.dataframe(input_row)
-    st.write('**Encoded y**')
-    st.write(y)
-
-# Обучение модели
-param_grid = {
-    'n_estimators': [50, 100],
-    'max_depth': [None, 5, 10]
-}
-
-# Создаем базовую модель
-base_rf = RandomForestClassifier(random_state=42)
-
-# Проводим Grid Search
-grid_search = GridSearchCV(base_rf, param_grid, cv=3, scoring='r2', n_jobs=-1)
-grid_search.fit(X, y)
-
-best_model = grid_search.best_estimator_
-best_params = grid_search.best_params_
-st.write("**Best Parameters**:", best_params)
-
-# Применяем модель для предсказания
-prediction = best_model.predict(input_row)
-
-# Вывод результата
-st.subheader('Predicted Price')
-st.success(f"Predicted price for the selected car: **{prediction[0]}** сомони")
 
