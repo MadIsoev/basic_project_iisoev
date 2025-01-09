@@ -53,3 +53,8 @@ data = {
 input_df = pd.DataFrame([data])
 combined_df = pd.concat([input_df, X_raw], axis=0)
 
+# Отображение введённых данных
+with st.expander('Введённые данные'):
+    st.write('Введённые характеристики автомобиля:')
+    st.dataframe(input_df)
+
