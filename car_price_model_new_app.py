@@ -1,38 +1,48 @@
+#Первая часть
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
+import numpy as np
 
 st.title('Предсказание цены на подержанные автомобили Opel')
 
-st.write('Прогнозирование цены основывается на таких признаках, как модель, год выпуска, коробка передач, тип топлива и город, где находится автомобиль.')
+st.write('Прогнозирование цены основывается на таких признаках, как модель, год выпуска, коробка передачи, тип топлива и город, где находится автомобиль.')
 
-# Загрузка данных
+# Пример загрузки данных
 df = pd.read_csv("Opel_data.csv")
 
-# Удаляем разделители тысяч и преобразуем в числовые данные
-df['Year'] = df['Year'].astype(int)
-df['Price'] = df['Price'].astype(int)
+# Удаляем разделители тысяч в Year и Price
+df['Year'] = df['Year'].apply(lambda x: f'{int(x)}')
+df['Price'] = df['Price'].apply(lambda x: f'{int(x)}')
 
-# Отображение данных
-with st.expander('Данные'):
-    st.write("Признаки (X):")
+# Отображаем таблицу
+with st.expander('Data'):
+    st.write("Признаки:")
     X_raw = df.drop('Price', axis=1)
     st.dataframe(X_raw)
 
-    st.write("Целевая переменная (y):")
+    st.write("Целовая переменная")
     y_raw = df['Price']
     st.dataframe(y_raw)
 
-# Ввод данных пользователем
 with st.sidebar:
-    st.header("Введите характеристики автомобиля: ")
-    model = st.selectbox('Модель', df['Model'].unique())
-    year = st.slider('Год выпуска', int(df['Year'].min()), int(df['Year'].max()))
-    transmission = st.selectbox('Коробка передач', df['Transmission'].unique())
-    fuel_type = st.selectbox('Тип топлива', df['Fuel type'].unique())
-    city = st.selectbox('Город', df['City'].unique())
+  st.header("Введите характеристики автомобиля: ")
+  model = st.selectbox('Модель', ('Opel Combo', 'Opel Astra H', 'Opel Astra G', 'Opel Astra F', 'Opel Vectra A', 'Opel Vectra B', 'Opel Vectra C', 'Opel Zafira', 
+                                  'Opel Astra J', 'Opel Meriva', 'Opel Omega', 'Opel Frontera', 'Opel Astra K', 'Opel Insignia', 'Opel Vita', 'Opel Corsa', 'Opel Calibra', 
+                                  'Opel Signum', 'Opel Tigra', 'Opel Antara', 'Opel Sintra', 'Opel Vectra С', 'Opel Vectra А', 'Opel Agila', 'Opel Mokka', 'Opel Campo', 
+                                  'Opel Cavalier'))
+  year = st.slider('Год выпуска', 1956, 2024, format="%d")
+  transmission = st.selectbox('Коробка передачи', ('Автомат', 'Механика', 'Робот', 'Вариатор'))
+  fuel_type = st.selectbox('Тип топлива', ('Дизель', 'Бензин', 'Бензин + газ', 'Газ', 'Другой'))
+  city = st.selectbox('Город', ('Душанбе', 'Худжанд', 'Куляб', 'Хорог', 'Дангара', 'Яван', 'Пенджикент', 'Истаравшан', 'Кабодиён', 'Фархор', 'Вахдат', 'Рашт',
+       'Дусти (Джиликуль)', 'Бободжон Гафуров', 'Файзабад', 'Ашт', 'Спитамен', 'Вахш', 'Исфара', 'Хамадани', 'Бохтар (Курган-Тюбе)',
+       'Кушониён (Бохтар)', 'Рудаки', 'Пяндж', 'Канибадам', 'Хуросон', 'Шахринав', 'Джалолиддин Балхи (Руми)', 'Восе', 'Нурек',
+       'Турсунзаде', 'Матча', 'Джаббор Расулов', 'Зафарабад', 'Джайхун (Кумсангир)', 'Деваштич (Ганчи)', 'Шахристон', 'Гиссар',
+       'Варзоб', 'Гулистон (Кайраккум)', 'Абдурахмони Джоми', 'Шахритус', 'Бустон (Чкаловск)', 'Темурмалик', 'Леваканд (Сарбанд)',
+       'Таджикабад', 'Рогун', 'Нурабад', 'Муминабад', 'Айни', 'Носири Хусрав', 'Джами', 'Лахш (Джиргиталь)',
+       'Шамсиддин Шохин (Шуроабад)', 'Вандж', 'Ховалинг', 'Бальджувон', 'Горная Матча', 'Истиклол', 'Дарваз'))
 
 # Визуализация данных
 st.subheader('Визуализация данных')
@@ -42,7 +52,7 @@ st.plotly_chart(fig)
 fig2 = px.histogram(df, x='Price', nbins=30, title='Распределение цен автомобилей')
 st.plotly_chart(fig2)
 
-# Предобработка данных
+## Preprocessing
 data = {
     'Model': model,
     'Year': year,
@@ -50,46 +60,7 @@ data = {
     'Fuel type': fuel_type,
     'City': city
 }
-input_df = pd.DataFrame([data])
-combined_df = pd.concat([input_df, X_raw], axis=0)
 
-# Отображение введённых данных
-with st.expander('Введённые данные'):
-    st.write('Введённые характеристики автомобиля:')
-    st.dataframe(input_df)
+input_df = pd.DataFrame(data, index=[0])
+input_cars = pd.concat([input_df, X_raw], axis=0)
 
-# Кодирование категориальных признаков
-encoded_df = pd.get_dummies(combined_df, columns=['Model', 'Transmission', 'Fuel type', 'City'], drop_first=True)
-
-# Разделение данных
-X = encoded_df.iloc[1:].reset_index(drop=True)
-input_row = encoded_df.iloc[0:1]
-
-# Целевая переменная
-y = y_raw
-
-# Подготовка данных
-with st.expander('Подготовленные данные'):
-    st.write('**Признаки (X):**')
-    st.dataframe(X)
-    st.write('**Целевая переменная (y):**')
-    st.write(y)
-
-# Обучение модели
-st.subheader('Обучение модели Random Forest Regressor')
-
-param_grid = {
-    'n_estimators': [50, 100],
-    'max_depth': [None, 5, 10]
-}
-
-base_rf = RandomForestRegressor(random_state=42)
-grid_search = GridSearchCV(base_rf, param_grid, cv=3, scoring='neg_mean_squared_error', n_jobs=-1)
-grid_search.fit(X, y)
-
-best_model = grid_search.best_estimator_
-st.write("**Лучшие параметры модели:**", grid_search.best_params_)
-
-# Предсказание цены
-prediction = best_model.predict(input_row)
-st.success(f"Предсказанная цена: {int(prediction[0])} сомони")
